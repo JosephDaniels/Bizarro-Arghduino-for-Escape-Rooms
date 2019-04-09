@@ -29,19 +29,18 @@ void start_timer() {
 
 void tick_timer() {
   unsigned long int currentTime = millis();
-  if (timer_running == false) {
+  if (timerRunning == false) {
     start_timer();
   }
-  else if (timer_running == true) {
+  else if (timerRunning == true) {
     if (currentTime < finishTime) {
       timeLeft =  finishTime - currentTime;
       Serial.print("Tick Tock on the Clock. Time Left:");
       Serial.println(timeLeft);
     }
     else if (currentTime > finishTime) {
-      timerRunning = false;
       Serial.print ("unlocked!");
-      digitalWrite(hatbox, LOW);
+      digitalWrite(hatbox, LOW); //unlocks the fucking door
       delay(3000);
     }
     }
@@ -50,18 +49,17 @@ void tick_timer() {
 void reset_timer() {
   digitalWrite(light, HIGH); // turns the light off
   Serial.println("Timer has reset.");
-  timerRunning = false;
 }
 
 // TIMER CODE END
-
 
 void loop() {
   if ((digitalRead (wand) == LOW)) {
     digitalWrite(light, LOW);
   }
-  if ((digitalRead (shadow) == LOW) && (digitalRead (light) == LOW) && Switchval == (0)) {
+  else if ((digitalRead (shadow) == LOW) && (digitalRead(wand) == HIGH)) {
     tick_timer(); //TICK TOCK the timer. Also opens the hatbox once time elapsed.
+    digitalWrite(light, HIGH);
     }
   else { // If any of the above conditions are not met
     reset_timer();
