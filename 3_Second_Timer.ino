@@ -49,6 +49,8 @@ void tick_timer() {
 void reset_timer() {
   digitalWrite(light, HIGH); // turns the light off
   Serial.println("Timer has reset.");
+  timerRunning = false;
+  timeLeft = 0;
 }
 
 // TIMER CODE END

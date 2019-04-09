@@ -32,10 +32,8 @@ void tick_timer() {
         Serial.println(timeLeft);
     }
     else if (currentTime > finishTime) {
-      timerRunning = false;
       Serial.print ("unlocked!");
       digitalWrite(LED_BUILTIN, HIGH);
-      delay(3000);
     }
 }
 }
@@ -44,6 +42,7 @@ void reset_timer() {
   //digitalWrite(light, HIGH); // turns the light off
   Serial.println("Timer has reset.");
   timerRunning = false;
+  timeLeft = 0;
 }
 
 // TIMER CODE END
@@ -51,11 +50,9 @@ void reset_timer() {
 void loop() {
   buttonState = digitalRead(buttonPin);
   if (buttonState == HIGH) {
-    Serial.print("Detecting HIGH");
     tick_timer();
     }
   else if (buttonState == LOW) {
-    Serial.print("Detected LOW");
     reset_timer();
     digitalWrite(LED_BUILTIN, LOW);
   }
