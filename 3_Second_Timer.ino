@@ -10,6 +10,7 @@ void setup() {
   pinMode(hatbox, OUTPUT);
   digitalWrite (light, HIGH);
   digitalWrite (hatbox, HIGH);
+  Serial.begin(9600);
 }
 
 //  TIMER CODE START
@@ -39,9 +40,8 @@ void tick_timer() {
       Serial.println(timeLeft);
     }
     else if (currentTime > finishTime) {
-      Serial.print ("unlocked!");
-      digitalWrite(hatbox, LOW); //unlocks the fucking door
-      delay(3000);
+      unlock_hatbox();
+      Switchval = 1;
     }
     }
   }
@@ -53,18 +53,31 @@ void reset_timer() {
   timeLeft = 0;
 }
 
+void unlock_hatbox() {
+  if (Switchval == 1) {
+    digitalWrite(hatbox, HIGH);
+  }
+  if (Switchval == 0) {
+    Serial.print ("unlocked!");
+    digitalWrite(hatbox, LOW); //unlocks the fucking door
+    delay(3000);
+  }
+}
+
 // TIMER CODE END
 
 void loop() {
-  if ((digitalRead (wand) == LOW)) {
+  if (digitalRead (wand) == LOW) {
     digitalWrite(light, LOW);
-  }
-  else if ((digitalRead (shadow) == LOW) && (digitalRead(wand) == HIGH)) {
-    tick_timer(); //TICK TOCK the timer. Also opens the hatbox once time elapsed.
-    digitalWrite(light, HIGH);
+    if (digitalRead (shadow) == LOW) {
+      tick_timer(); //TICK TOCK the timer. Also opens the hatbox once time elapsed.
+      }
+    else if (digitalRead(shadow)) == HIGH) {
+      reset_timer();
     }
+  }
   else { // If any of the above conditions are not met
     reset_timer();
-    digitalWrite(hatbox, HIGH);
+    Switchval = 0;
   }
 }
